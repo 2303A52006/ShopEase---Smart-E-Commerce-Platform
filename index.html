@@ -1,97 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShopEase – Minimal Store</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ShopEase – Neon Glass Store</title>
 
-  <!-- BOOTSTRAP CSS -->
+  <!-- Bootstrap (for layout + offcanvas) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- CUSTOM CSS -->
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-light bg-white shadow-sm py-3">
-  <div class="container d-flex justify-content-between align-items-center">
-    <h3 class="fw-bold m-0">ShopEase</h3>
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg align-items-center">
+    <div class="container">
+      <a class="brand" href="#">ShopEase</a>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <input id="searchBar" class="search-input" type="text" placeholder="Search products..." />
+        <button id="themeToggle" class="theme-btn">🟢 Neon</button>
+        <button class="cart-btn" data-bs-toggle="offcanvas" data-bs-target="#cartPanel">🛒 <span id="cartCount" class="cart-badge">0</span></button>
+      </div>
+    </div>
+  </nav>
 
-    <button class="btn btn-outline-dark position-relative" data-bs-toggle="offcanvas" data-bs-target="#cartPanel">
-      🛒
-      <span id="cartCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle">0</span>
-    </button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<header class="hero-section">
-  <h1 class="display-5 fw-bold">Minimal. Clean. Smart.</h1>
-  <p class="lead">Premium products with a simple experience.</p>
-</header>
-
-<!-- SEARCH + DARK MODE -->
-<div class="container mt-4 d-flex justify-content-between align-items-center flex-wrap">
-
-  <input id="searchBar" class="search-input mb-3" type="text" placeholder="Search products...">
-
-  <button id="themeToggle" class="theme-btn mb-3">🌙 Dark Mode</button>
-
-</div>
-
-<!-- PRODUCT GRID -->
-<div class="container my-5">
-  <div class="row g-4" id="productGrid"></div>
-</div>
-
-<!-- PRODUCT MODAL -->
-<div class="modal fade" id="productModal">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content modal-apple">
-
-      <div class="modal-body row">
-        <div class="col-md-6">
-          <img id="modalImage" class="modal-img">
-        </div>
-
-        <div class="col-md-6">
-          <h3 id="modalTitle" class="fw-bold mb-3"></h3>
-          <h4 id="modalPrice" class="text-primary mb-3"></h4>
-          <p id="modalDesc" class="text-muted mb-3"></p>
-
-          <label class="fw-semibold">Quantity:</label>
-          <input id="modalQty" type="number" min="1" value="1" class="form-control w-50 mb-3">
-
-          <button id="modalAddBtn" class="btn btn-dark w-100">Add to Cart</button>
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner container">
+      <div class="hero-left">
+        <h1 class="hero-title">#CLUB<br><span>NEON</span> PRODUCTS</h1>
+        <p class="hero-sub">Bold. Modern. Glossy. Curated for creators and makers.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-cta">Explore Collection</button>
+          <button class="btn btn-ghost">How it works</button>
         </div>
       </div>
 
+      <div class="hero-right">
+        <!-- Floating glass cards -->
+        <div class="float-card card-a glass" data-tilt>
+          <img src="https://plus.unsplash.com/premium_photo-1678099940967-73fe30680949?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0" alt="Headphones">
+          <div class="card-tag">Wireless Headphones</div>
+        </div>
+
+        <div class="float-card card-b glass" data-tilt>
+          <img src="https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?q=80&w=888&auto=format&fit=crop&ixlib=rb-4.1.0" alt="Smart Watch">
+          <div class="card-tag">Smart Watch</div>
+        </div>
+
+        <div class="float-card card-c glass" data-tilt>
+          <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0" alt="Jacket">
+          <div class="card-tag">Leather Jacket</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PRODUCT GRID -->
+  <main class="container products-wrap">
+    <div class="row g-4" id="productGrid"></div>
+  </main>
+
+  <!-- PRODUCT MODAL -->
+  <div class="modal fade" id="productModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content modal-glass">
+        <div class="modal-body row align-items-center">
+          <div class="col-md-6">
+            <img id="modalImage" class="modal-img" alt="">
+          </div>
+          <div class="col-md-6">
+            <h3 id="modalTitle"></h3>
+            <h4 id="modalPrice" class="text-neon"></h4>
+            <p id="modalDesc" class="text-muted"></p>
+
+            <label class="fw-semibold">Quantity</label>
+            <input id="modalQty" type="number" min="1" value="1" class="form-control w-50 mb-3">
+
+            <button id="modalAddBtn" class="btn btn-neon w-100">Add to cart</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- CART PANEL -->
-<div class="offcanvas offcanvas-end" id="cartPanel">
-  <div class="offcanvas-header">
-    <h5>Your Cart</h5>
-    <button class="btn-close" data-bs-dismiss="offcanvas"></button>
-  </div>
-
-  <div class="offcanvas-body d-flex flex-column">
-    <div id="cartItems"></div>
-
-    <div class="mt-auto pt-3 border-top">
-      <h5>Total: <span id="cartTotal">₹0</span></h5>
-      <button class="btn btn-dark w-100 mt-2">Checkout</button>
+  <!-- CART OFFCANVAS -->
+  <div class="offcanvas offcanvas-end" id="cartPanel">
+    <div class="offcanvas-header">
+      <h5>Your Cart</h5>
+      <button class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <div id="cartItems"></div>
+      <div class="mt-auto pt-3 border-top">
+        <h5>Total: <span id="cartTotal">₹0</span></h5>
+        <button class="btn btn-neon w-100 mt-2">Checkout</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- BOOTSTRAP + YOUR JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/script.js"></script>
-
+  <!-- Bootstrap + script -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
