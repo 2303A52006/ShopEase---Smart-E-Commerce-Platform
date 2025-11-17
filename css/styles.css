@@ -1,54 +1,62 @@
-body {
-  background: #071a44;
-  color: white;
-  font-family: "Inter", sans-serif;
+:root{
+  --bg: #071a44;
+  --neon: #00ff86;
+  --glass: rgba(255,255,255,0.04);
+  --muted: rgba(255,255,255,0.75);
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto; background:linear-gradient(180deg,var(--bg), #05102a); color:#eaf2ff}
+
+/* NAV */
+.brand{font-weight:800; color:#fff; font-size:20px}
+.search-input{padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.04); color:#fff; width:260px}
+
+/* HERO */
+.hero{padding:48px 0}
+.text-neon{color:var(--neon); text-shadow:0 6px 18px rgba(0,255,134,0.12)}
+
+/* GLASS CARD */
+.glass-card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border-radius:14px; border:1px solid rgba(255,255,255,0.06); backdrop-filter:blur(8px)}
+
+/* PRODUCT */
+.product-img{width:100%; height:220px; object-fit:cover; border-radius:10px}
+.btn-neon{background:linear-gradient(90deg,var(--neon), #00ffa8); color:#002b18; border:none; padding:8px 12px; border-radius:10px; font-weight:700}
+.btn-outline-neon{background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:10px}
+.text-neon-weak{color:rgba(0,255,134,0.9)}
+
+/* REVIEWS MARQUEE */
+.reviews-section{padding:40px 0; text-align:center}
+.reviews-title{color:var(--neon); font-size:22px; font-weight:800; margin-bottom:18px}
+.reviews-marquee{overflow:hidden; padding:8px 0}
+.reviews-track{display:flex; gap:20px; align-items:center; animation:scrollReviews 18s linear infinite}
+.review-item{padding:12px 22px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.06); box-shadow:0 8px 30px rgba(0,255,134,0.04); white-space:nowrap; font-weight:700}
+
+/* CONTACT */
+.contact-section{padding:30px 0; text-align:center}
+.contact-title{font-size:20px; font-weight:800}
+.contact-box{display:flex; gap:30px; justify-content:center; flex-wrap:wrap; margin-top:16px}
+.contact-item h5{margin-bottom:6px; color:var(--neon)}
+
+/* FOOTER */
+.footer-section{padding:28px 0; text-align:center; border-top:1px solid rgba(255,255,255,0.04); margin-top:28px}
+
+/* MODALS */
+.modal-content.glass-card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border-radius:12px; border:1px solid rgba(255,255,255,0.06); backdrop-filter:blur(8px)}
+
+/* CART ITEM */
+.cart-img{width:60px; height:60px; object-fit:cover; border-radius:8px}
+
+/* PROFILE BTN */
+.profile-btn{background:rgba(255,255,255,0.05); color:var(--neon); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:6px 10px}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+  .search-input{width:160px}
+  .reviews-track{animation-duration:28s}
 }
 
-.text-neon {
-  color: #00ff86;
-}
-
-/* SEARCH */
-.search-input {
-  width: 300px;
-  padding: 12px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.08);
-  border: none;
-  color: white;
-}
-
-/* PRODUCT CARDS */
-.glass-card {
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.15);
-}
-
-.product-img {
-  width: 100%;
-  height: 230px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.btn-neon {
-  background: linear-gradient(90deg, #00ff86, #00ffa8);
-  color: #00351c;
-  font-weight: 700;
-  border-radius: 10px;
-}
-
-/* PROFILE DROPDOWN */
-.profile-btn {
-  background: rgba(255,255,255,0.08);
-  color: #00ff86;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.profile-btn:hover {
-  background: rgba(0,255,134,0.25);
-  color: white;
+/* KEYFRAMES */
+@keyframes scrollReviews{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
 }
