@@ -1,86 +1,84 @@
 // ================================
-// PRODUCTS (data)
+// PRODUCT DATA
 // ================================
 const products = [
-  { id:1, title:"Wireless Headphones", price:2999, img:"https://plus.unsplash.com/premium_photo-1678099940967-73fe30680949?q=80&w=880&auto=format&fit=crop", desc:"Comfortable premium wireless sound." },
-  { id:2, title:"Smart Watch", price:4999, img:"https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?q=80&w=888&auto=format&fit=crop", desc:"Track fitness, calls, and more." },
-  { id:3, title:"Leather Jacket", price:5599, img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=735&auto=format&fit=crop", desc:"Classic premium leather design." },
-  { id:4, title:"Running Shoes", price:2499, img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1170&auto=format&fit=crop", desc:"Lightweight shoes for daily running." },
-  { id:5, title:"Ceramic Vase", price:799, img:"https://plus.unsplash.com/premium_photo-1668620538983-c5993e4a443d?q=80&w=687&auto=format&fit=crop", desc:"Decorative modern ceramic vase." },
-  { id:6, title:"Bluetooth Speaker", price:1999, img:"https://images.unsplash.com/photo-1589256469067-ea99122bbdc4?q=80&w=1074&auto=format&fit=crop", desc:"Portable speaker with deep bass." }
+  { id:1, title:"Wireless Headphones", price:2999, img:"https://plus.unsplash.com/premium_photo-1678099940967-73fe30680949", desc:"Comfortable premium wireless sound." },
+  { id:2, title:"Smart Watch", price:4999, img:"https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6", desc:"Track fitness, calls, and more." },
+  { id:3, title:"Leather Jacket", price:5599, img:"https://images.unsplash.com/photo-1551028719-00167b16eac5", desc:"Classic premium leather design." },
+  { id:4, title:"Running Shoes", price:2499, img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff", desc:"Lightweight shoes for daily running." },
+  { id:5, title:"Ceramic Vase", price:799, img:"https://plus.unsplash.com/premium_photo-1668620538983-c5993e4a443d", desc:"Decorative modern ceramic vase." },
+  { id:6, title:"Bluetooth Speaker", price:1999, img:"https://images.unsplash.com/photo-1589256469067-ea99122bbdc4", desc:"Portable speaker with deep bass." }
 ];
 
-// ================================
-// DOM references
-// ================================
 const productGrid = document.getElementById("productGrid");
 const searchBar = document.getElementById("searchBar");
 const cartItems = document.getElementById("cartItems");
 const cartTotal = document.getElementById("cartTotal");
 const cartCount = document.getElementById("cartCount");
 
-let cart = {}; // key: productId, value: qty
+let cart = {};
 
 // ================================
-// AUTH (signup/login)
+// AUTH
 // ================================
 function openAuth(){
   new bootstrap.Modal(document.getElementById("authModal")).show();
 }
 
 function loginUser(){
-  const name = document.getElementById("authName").value.trim();
-  const email = document.getElementById("authEmail").value.trim();
-  const pass = document.getElementById("authPass").value.trim();
-  if(!name || !email || !pass){ showToast("Fill all fields"); return; }
+  const name = authName.value.trim();
+  const email = authEmail.value.trim();
+  const pass = authPass.value.trim();
 
-  // store user (demo only)
-  localStorage.setItem("user", JSON.stringify({ name, email }));
-  localStorage.setItem("loggedIn", "true");
+  if(!name || !email || !pass){
+    showToast("Enter all fields!");
+    return;
+  }
+
+  localStorage.setItem("loggedIn","true");
+  localStorage.setItem("user", JSON.stringify({name,email}));
 
   showProfileMenu();
-  showToast("Logged in as " + name);
-  bootstrap.Modal.getInstance(document.getElementById("authModal")).hide();
+  bootstrap.Modal.getInstance(authModal).hide();
+  showToast("Logged in!");
 }
+
+function showProfileMenu(){
+  let user = JSON.parse(localStorage.getItem("user"));
+  if(!user) return;
+
+  profileName.textContent = user.name;
+  loginBtn.classList.add("d-none");
+  profileMenu.classList.remove("d-none");
+}
+
+if(localStorage.getItem("loggedIn") === "true") showProfileMenu();
 
 function logout(){
   localStorage.removeItem("loggedIn");
-  // optionally keep user info but hide profile state
-  document.getElementById("profileName").innerText = "";
-  document.getElementById("profileMenu").classList.add("d-none");
-  document.getElementById("loginBtn").classList.remove("d-none");
-  cart = {}; updateCart();
-  showToast("Logged out");
+  showToast("Logged out!");
+  location.reload();
 }
 
-// show profile dropdown if logged in
-function showProfileMenu(){
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  if(!user) return;
-  document.getElementById("profileName").innerText = user.name;
-  document.getElementById("loginBtn").classList.add("d-none");
-  document.getElementById("profileMenu").classList.remove("d-none");
-}
-
-// if already logged in on load
-if(localStorage.getItem("loggedIn") === "true"){ showProfileMenu(); }
-
 // ================================
-// RENDER PRODUCTS
+// PRODUCTS
 // ================================
-function loadProducts(list = products){
+function loadProducts(list=products){
   productGrid.innerHTML = list.map(p => `
     <div class="col-md-4">
-      <div class="glass-card p-3 product-card">
-        <img src="${p.img}" class="product-img" alt="${p.title}">
+      <div class="glass-card p-3">
+
+        <img src="${p.img}" class="product-img">
+
         <h5 class="fw-bold mt-3">${p.title}</h5>
         <p class="opacity-75 small">${p.desc}</p>
 
         <div class="d-flex justify-content-between align-items-center mt-3">
           <span class="text-neon fw-bold">₹${p.price}</span>
+
           <div>
-            <button class="btn btn-outline-neon btn-sm me-2" onclick="event.stopPropagation(); openProduct(${p.id})">View</button>
-            <button class="btn btn-neon btn-sm" onclick="event.stopPropagation(); addToCart(${p.id})">Add</button>
+            <button class="btn btn-outline-neon btn-sm me-2" onclick="openProduct(${p.id})">View</button>
+            <button class="btn btn-neon btn-sm" onclick="addToCart(${p.id})">Add</button>
           </div>
         </div>
       </div>
@@ -89,30 +87,34 @@ function loadProducts(list = products){
 }
 loadProducts();
 
-// optional simple product view (requires login)
+// ================================
+// PRODUCT MODAL
+// ================================
 function openProduct(id){
-  if(!requireLogin()) return;
   const p = products.find(x => x.id === id);
-  alert(`${p.title}\n\nPrice: ₹${p.price}\n\n${p.desc}`);
+
+  document.getElementById("modalImg").src = p.img;
+  document.getElementById("modalTitle").innerText = p.title;
+  document.getElementById("modalDesc").innerText = p.desc;
+  document.getElementById("modalPrice").innerText = "₹" + p.price;
+
+  modalAddBtn.onclick = ()=> addToCart(id);
+
+  new bootstrap.Modal(document.getElementById("productModal")).show();
 }
 
 // ================================
-// Require login wrapper
-// ================================
-function requireLogin(){
-  if(localStorage.getItem("loggedIn") === "true") return true;
-  openAuth();
-  return false;
-}
-
-// ================================
-// CART functions
+// CART
 // ================================
 function addToCart(id){
-  if(!requireLogin()) return;
-  if(cart[id]) cart[id] += 1; else cart[id] = 1;
+  if(localStorage.getItem("loggedIn") !== "true"){
+    openAuth();
+    return;
+  }
+
+  cart[id] = (cart[id] || 0) + 1;
   updateCart();
-  showToast("Added to cart");
+  showToast("Added to cart!");
 }
 
 function removeItem(id){
@@ -123,108 +125,121 @@ function removeItem(id){
 function updateCart(){
   cartItems.innerHTML = "";
   let total = 0, count = 0;
-  Object.keys(cart).forEach(id => {
-    const p = products.find(x => x.id == id);
+
+  Object.keys(cart).forEach(id=>{
+    const p = products.find(x=>x.id==id);
     const qty = cart[id];
-    const price = p.price * qty;
-    total += price; count += qty;
+    const price = qty * p.price;
+
+    total += price;
+    count += qty;
 
     cartItems.innerHTML += `
       <div class="d-flex align-items-center mb-3">
-        <img src="${p.img}" class="cart-img me-3" alt="${p.title}">
+        <img src="${p.img}" class="cart-img me-3">
         <div class="flex-grow-1">
           <h6 class="m-0">${p.title}</h6>
-          <small class="opacity-75">₹${p.price} × ${qty} = ₹${price}</small>
+          <small>₹${p.price} × ${qty} = ₹${price}</small>
         </div>
         <button class="btn btn-outline-danger btn-sm" onclick="removeItem(${id})">Remove</button>
       </div>
     `;
   });
+
   cartTotal.innerText = "₹" + total;
   cartCount.innerText = count;
 }
 
-// checkout -> save orders to localStorage
 function checkout(){
-  if(!requireLogin()) return;
-  let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  if(localStorage.getItem("loggedIn") !== "true"){
+    openAuth();
+    return;
+  }
 
-  Object.keys(cart).forEach(id => {
-    const p = products.find(x => x.id == id);
-    orders.push({ title: p.title, qty: cart[id], total: p.price * cart[id], date: new Date().toLocaleString() });
+  let orders = JSON.parse(localStorage.getItem("orders")||"[]");
+
+  Object.keys(cart).forEach(id=>{
+    const p = products.find(x=>x.id==id);
+    orders.push({
+      title:p.title,
+      qty:cart[id],
+      total:p.price*cart[id],
+      date:new Date().toLocaleString()
+    });
   });
 
-  localStorage.setItem("orders", JSON.stringify(orders));
-  cart = {}; updateCart();
-  showToast("Order placed");
+  localStorage.setItem("orders",JSON.stringify(orders));
+  cart = {};
+  updateCart();
+  showToast("Order placed!");
 }
 
 // ================================
-// PROFILE & ORDERS UI
+// PROFILE / ORDERS
 // ================================
 function openProfile(){
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  if(!user){ openAuth(); return; }
+  const user = JSON.parse(localStorage.getItem("user")||"null");
   document.getElementById("profName").innerText = user.name;
   document.getElementById("profEmail").innerText = user.email;
-  new bootstrap.Modal(document.getElementById("profileModal")).show();
+  new bootstrap.Modal(profileModal).show();
 }
 
 function closeProfile(){
-  bootstrap.Modal.getInstance(document.getElementById("profileModal")).hide();
+  bootstrap.Modal.getInstance(profileModal).hide();
 }
 
 function openOrders(){
-  if(!requireLogin()) return;
-  const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  const orders = JSON.parse(localStorage.getItem("orders")||"[]");
   const box = document.getElementById("ordersList");
-  if(orders.length === 0){
-    box.innerHTML = `<p class="text-center opacity-75">⚠️ No orders found. Start shopping and place your first order!</p>`;
+
+  if(orders.length===0){
+    box.innerHTML = `<p class="text-center opacity-75">No orders yet.</p>`;
   } else {
-    box.innerHTML = orders.slice().reverse().map(o => `
+    box.innerHTML = orders.reverse().map(o=>`
       <div class="glass-card p-3 mb-3">
-        <div class="d-flex justify-content-between">
-          <div>
-            <strong>${o.title}</strong><br/>
-            <small class="opacity-75">Qty: ${o.qty} • ${o.date}</small>
-          </div>
-          <div class="text-neon fw-bold">₹${o.total}</div>
-        </div>
+        <strong>${o.title}</strong><br>
+        Qty: ${o.qty}<br>
+        Total: ₹${o.total}<br>
+        <small>${o.date}</small>
       </div>
     `).join("");
   }
-  new bootstrap.Modal(document.getElementById("ordersModal")).show();
+
+  new bootstrap.Modal(ordersModal).show();
 }
 
 function closeOrders(){
-  bootstrap.Modal.getInstance(document.getElementById("ordersModal")).hide();
+  bootstrap.Modal.getInstance(ordersModal).hide();
 }
 
 // ================================
 // SEARCH
 // ================================
-searchBar.addEventListener("input", () => {
+searchBar.addEventListener("input",()=>{
   const q = searchBar.value.toLowerCase();
-  const filtered = products.filter(p => p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
-  loadProducts(filtered);
+  loadProducts(products.filter(p =>
+    p.title.toLowerCase().includes(q) ||
+    p.desc.toLowerCase().includes(q)
+  ));
 });
 
 // ================================
-// small toast for feedback
+// Toast Notification
 // ================================
 function showToast(msg){
-  const el = document.createElement("div");
-  el.innerText = msg;
-  el.style.position = "fixed";
-  el.style.right = "20px";
-  el.style.bottom = "30px";
-  el.style.padding = "10px 16px";
-  el.style.borderRadius = "10px";
-  el.style.background = "linear-gradient(90deg,#00ff86,#00ffa8)";
-  el.style.color = "#002b18";
-  el.style.fontWeight = "700";
-  el.style.boxShadow = "0 10px 30px rgba(0,255,134,0.12)";
-  document.body.appendChild(el);
-  setTimeout(()=> el.style.opacity = "0", 1600);
-  setTimeout(()=> el.remove(), 2200);
+  const t = document.createElement("div");
+  t.innerHTML = msg;
+  t.style.position = "fixed";
+  t.style.bottom = "25px";
+  t.style.right = "20px";
+  t.style.background = "#00ff86";
+  t.style.color = "#002b18";
+  t.style.padding = "10px 16px";
+  t.style.borderRadius = "10px";
+  t.style.fontWeight = "700";
+  t.style.boxShadow = "0 5px 25px rgba(0,255,134,0.3)";
+  document.body.appendChild(t);
+
+  setTimeout(()=> t.style.opacity="0",1200);
+  setTimeout(()=> t.remove(),1800);
 }
