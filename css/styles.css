@@ -2,12 +2,11 @@
   --bg: #071a44;
   --neon: #00ff86;
   --glass: rgba(255,255,255,0.04);
-  --muted: rgba(255,255,255,0.75);
 }
 *{box-sizing:border-box}
 html,body{height:100%; margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto; background:linear-gradient(180deg,var(--bg), #05102a); color:#eaf2ff}
 
-/* NAV */
+/* NAV / SEARCH */
 .brand{font-weight:800; color:#fff; font-size:20px}
 .search-input{padding:10px 14px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.04); color:#fff; width:260px}
 
@@ -23,6 +22,9 @@ html,body{height:100%; margin:0; font-family:Inter, system-ui, -apple-system, "S
 .btn-neon{background:linear-gradient(90deg,var(--neon), #00ffa8); color:#002b18; border:none; padding:8px 12px; border-radius:10px; font-weight:700}
 .btn-outline-neon{background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.06); padding:8px 12px; border-radius:10px}
 .text-neon-weak{color:rgba(0,255,134,0.9)}
+
+/* PRODUCT CARD container spacing (so products aren't tiny) */
+#productGrid .glass-card{min-height:360px; display:flex; flex-direction:column; justify-content:space-between}
 
 /* REVIEWS MARQUEE */
 .reviews-section{padding:40px 0; text-align:center}

@@ -1,5 +1,5 @@
 // ================================
-// PRODUCTS
+// PRODUCTS (data)
 // ================================
 const products = [
   { id:1, title:"Wireless Headphones", price:2999, img:"https://plus.unsplash.com/premium_photo-1678099940967-73fe30680949?q=80&w=880&auto=format&fit=crop", desc:"Comfortable premium wireless sound." },
@@ -11,7 +11,7 @@ const products = [
 ];
 
 // ================================
-// DOM elements
+// DOM references
 // ================================
 const productGrid = document.getElementById("productGrid");
 const searchBar = document.getElementById("searchBar");
@@ -19,10 +19,10 @@ const cartItems = document.getElementById("cartItems");
 const cartTotal = document.getElementById("cartTotal");
 const cartCount = document.getElementById("cartCount");
 
-let cart = {};
+let cart = {}; // key: productId, value: qty
 
 // ================================
-// AUTH: open modal & login
+// AUTH (signup/login)
 // ================================
 function openAuth(){
   new bootstrap.Modal(document.getElementById("authModal")).show();
@@ -32,30 +32,28 @@ function loginUser(){
   const name = document.getElementById("authName").value.trim();
   const email = document.getElementById("authEmail").value.trim();
   const pass = document.getElementById("authPass").value.trim();
-  if(!name || !email || !pass){ alert("Fill all fields"); return; }
+  if(!name || !email || !pass){ showToast("Fill all fields"); return; }
 
-  localStorage.setItem("user", JSON.stringify({name,email}));
-  localStorage.setItem("loggedIn","true");
+  // store user (demo only)
+  localStorage.setItem("user", JSON.stringify({ name, email }));
+  localStorage.setItem("loggedIn", "true");
 
-  // show profile UI
   showProfileMenu();
-  alert("Logged in as " + name);
+  showToast("Logged in as " + name);
   bootstrap.Modal.getInstance(document.getElementById("authModal")).hide();
 }
 
-// logout
 function logout(){
   localStorage.removeItem("loggedIn");
   // optionally keep user info but hide profile state
   document.getElementById("profileName").innerText = "";
   document.getElementById("profileMenu").classList.add("d-none");
   document.getElementById("loginBtn").classList.remove("d-none");
-  alert("Logged out");
-  // clear cart for demo (optional)
   cart = {}; updateCart();
+  showToast("Logged out");
 }
 
-// show profile menu after login
+// show profile dropdown if logged in
 function showProfileMenu(){
   const user = JSON.parse(localStorage.getItem("user") || "null");
   if(!user) return;
@@ -65,10 +63,10 @@ function showProfileMenu(){
 }
 
 // if already logged in on load
-if(localStorage.getItem("loggedIn")==="true"){ showProfileMenu(); }
+if(localStorage.getItem("loggedIn") === "true"){ showProfileMenu(); }
 
 // ================================
-// LOAD products
+// RENDER PRODUCTS
 // ================================
 function loadProducts(list = products){
   productGrid.innerHTML = list.map(p => `
@@ -91,18 +89,18 @@ function loadProducts(list = products){
 }
 loadProducts();
 
-// view product (requires login)
+// optional simple product view (requires login)
 function openProduct(id){
   if(!requireLogin()) return;
-  const p = products.find(x=>x.id===id);
+  const p = products.find(x => x.id === id);
   alert(`${p.title}\n\nPrice: ₹${p.price}\n\n${p.desc}`);
 }
 
 // ================================
-// requireLogin wrapper
+// Require login wrapper
 // ================================
 function requireLogin(){
-  if(localStorage.getItem("loggedIn")==="true") return true;
+  if(localStorage.getItem("loggedIn") === "true") return true;
   openAuth();
   return false;
 }
@@ -130,9 +128,10 @@ function updateCart(){
     const qty = cart[id];
     const price = p.price * qty;
     total += price; count += qty;
+
     cartItems.innerHTML += `
       <div class="d-flex align-items-center mb-3">
-        <img src="${p.img}" class="cart-img me-3">
+        <img src="${p.img}" class="cart-img me-3" alt="${p.title}">
         <div class="flex-grow-1">
           <h6 class="m-0">${p.title}</h6>
           <small class="opacity-75">₹${p.price} × ${qty} = ₹${price}</small>
@@ -145,22 +144,23 @@ function updateCart(){
   cartCount.innerText = count;
 }
 
-// checkout -> save orders
+// checkout -> save orders to localStorage
 function checkout(){
   if(!requireLogin()) return;
   let orders = JSON.parse(localStorage.getItem("orders") || "[]");
-  // convert cart items to orders
+
   Object.keys(cart).forEach(id => {
     const p = products.find(x => x.id == id);
     orders.push({ title: p.title, qty: cart[id], total: p.price * cart[id], date: new Date().toLocaleString() });
   });
+
   localStorage.setItem("orders", JSON.stringify(orders));
   cart = {}; updateCart();
   showToast("Order placed");
 }
 
 // ================================
-// PROFILE & ORDERS modals
+// PROFILE & ORDERS UI
 // ================================
 function openProfile(){
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -169,6 +169,7 @@ function openProfile(){
   document.getElementById("profEmail").innerText = user.email;
   new bootstrap.Modal(document.getElementById("profileModal")).show();
 }
+
 function closeProfile(){
   bootstrap.Modal.getInstance(document.getElementById("profileModal")).hide();
 }
@@ -180,7 +181,7 @@ function openOrders(){
   if(orders.length === 0){
     box.innerHTML = `<p class="text-center opacity-75">⚠️ No orders found. Start shopping and place your first order!</p>`;
   } else {
-    box.innerHTML = orders.reverse().map(o => `
+    box.innerHTML = orders.slice().reverse().map(o => `
       <div class="glass-card p-3 mb-3">
         <div class="d-flex justify-content-between">
           <div>
@@ -194,6 +195,7 @@ function openOrders(){
   }
   new bootstrap.Modal(document.getElementById("ordersModal")).show();
 }
+
 function closeOrders(){
   bootstrap.Modal.getInstance(document.getElementById("ordersModal")).hide();
 }
@@ -208,10 +210,9 @@ searchBar.addEventListener("input", () => {
 });
 
 // ================================
-// SMALL TOAST (visual feedback)
+// small toast for feedback
 // ================================
 function showToast(msg){
-  // simple ephemeral toast using alert replacement
   const el = document.createElement("div");
   el.innerText = msg;
   el.style.position = "fixed";
@@ -224,6 +225,6 @@ function showToast(msg){
   el.style.fontWeight = "700";
   el.style.boxShadow = "0 10px 30px rgba(0,255,134,0.12)";
   document.body.appendChild(el);
-  setTimeout(()=> el.style.opacity = "0", 1800);
-  setTimeout(()=> el.remove(), 2400);
+  setTimeout(()=> el.style.opacity = "0", 1600);
+  setTimeout(()=> el.remove(), 2200);
 }
